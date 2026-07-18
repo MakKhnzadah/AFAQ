@@ -1,0 +1,42 @@
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Node / React
+node_modules/
+dist/
+build/
+coverage/
+.vite/
+
+# Gradle / Kotlin
+backend/.gradle/
+backend/build/
+.gradle/
+build/
+backend/gradle/wrapper/gradle-wrapper-shared-*.jar
+
+# IntelliJ / VS Code
+.idea/
+*.iml
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.example.json
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Local uploads and runtime data
+uploads/
+backend/uploads/
+data/
+
+# Test and temporary files
+tmp/
+temp/
