@@ -1,5 +1,6 @@
 package no.afaq
 
+import jakarta.persistence.EntityManager
 import no.afaq.persistence.entity.AdminUserEntity
 import no.afaq.persistence.entity.ClassroomEntity
 import no.afaq.persistence.entity.RoleEntity
@@ -51,6 +52,9 @@ class PostgreSqlIntegrationTests {
 
     @Autowired
     private lateinit var schoolRegistrationRepository: SchoolRegistrationRepository
+
+    @Autowired
+    private lateinit var entityManager: EntityManager
 
     @Autowired
     private lateinit var jdbcTemplate: JdbcTemplate
@@ -231,6 +235,7 @@ class PostgreSqlIntegrationTests {
     @Test
     fun classroomDeletionIsPreventedWhenReferenced() {
         val classroom = classroomRepository.findAllByActiveTrueOrderByDisplayOrderAsc().first()
+        val classroomId = requireNotNull(classroom.id)
 
         schoolRegistrationRepository.saveAndFlush(
             SchoolRegistrationEntity(
@@ -247,8 +252,10 @@ class PostgreSqlIntegrationTests {
             ),
         )
 
+        entityManager.clear()
+
         assertThrows(DataIntegrityViolationException::class.java) {
-            classroomRepository.delete(classroom)
+            classroomRepository.deleteById(classroomId)
             classroomRepository.flush()
         }
     }
