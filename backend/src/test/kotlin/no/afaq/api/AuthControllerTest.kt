@@ -43,9 +43,9 @@ class AuthControllerTest {
             SecurityContextHolder.getContext().authentication.authorities.map { it.authority },
         )
         assertNotNull(
-            servletRequest.session.getAttribute(
-                HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
-            ),
+           requireNotNull(servletRequest.session).getAttribute(
+               HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+           ),
         )
     }
 
