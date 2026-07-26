@@ -32,6 +32,12 @@ Docker is required for the PostgreSQL integration tests.
 
 The checked-in backend Gradle wrapper includes `backend/gradlew`, `backend/gradlew.bat`, `backend/gradle/wrapper/gradle-wrapper.properties`, and `backend/gradle/wrapper/gradle-wrapper.jar`.
 
+## Continuous integration
+
+Pull requests and pushes to `main` run frontend build, backend unit-test,
+PostgreSQL integration-test, and backend Docker-build checks. See
+[docs/ci.md](docs/ci.md) for details and equivalent local commands.
+
 
 Prompt — Connect the Existing AFAQ Frontend to Kotlin and PostgreSQL
 
