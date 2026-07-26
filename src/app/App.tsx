@@ -11,8 +11,12 @@ import { ContactPage } from '@/app/pages/ContactPage';
 import { GalleryPage } from '@/app/pages/GalleryPage';
 import { AdminPage } from '@/app/pages/AdminPage';
 
-export default function App() {
-  const [currentPage, setCurrentPage] = useState('home');
+interface AppProps {
+  initialPage?: string;
+}
+
+export default function App({ initialPage = 'home' }: AppProps) {
+  const [currentPage, setCurrentPage] = useState(initialPage);
 
   const renderPage = () => {
     switch (currentPage) {

@@ -4,6 +4,7 @@ import { Button } from '@/app/components/ui/button';
 import { Input } from '@/app/components/ui/input';
 import { Label } from '@/app/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/app/components/ui/card';
+import { initializeCsrf, login } from '@/api/authApi';
 
 export function AdminLoginPage() {
   const navigate = useNavigate();
@@ -18,17 +19,8 @@ export function AdminLoginPage() {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:8080/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Invalid email or password');
-      }
-
+      await login(email, password);
+      await initializeCsrf();
       navigate('/admin');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Login failed');

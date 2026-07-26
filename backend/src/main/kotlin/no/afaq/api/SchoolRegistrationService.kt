@@ -22,19 +22,32 @@ class SchoolRegistrationService(
     @Transactional
     fun createRegistration(request: CreateSchoolRegistrationRequest): SchoolRegistrationResponse {
         require(request.consentAccepted) { "Consent must be accepted" }
+        require(!request.childDateOfBirth.isAfter(LocalDate.now())) { "Date of birth cannot be in the future" }
 
         val classroom = classroomRepository.findById(request.classroomId)
             .orElseThrow { IllegalArgumentException("Classroom not found") }
         require(classroom.active) { "Selected classroom is not active" }
 
+        val normalizedChildName = request.childFullName.trim()
+        val normalizedEmail = request.email.trim().lowercase()
+        if (
+            schoolRegistrationRepository.existsByEmailIgnoreCaseAndChildFullNameIgnoreCaseAndChildDateOfBirth(
+                normalizedEmail,
+                normalizedChildName,
+                request.childDateOfBirth,
+            )
+        ) {
+            throw DuplicateRegistrationException()
+        }
+
         val publicReference = generatePublicReference()
         val entity = SchoolRegistrationEntity(
             publicReference = publicReference,
-            childFullName = request.childFullName.trim(),
+            childFullName = normalizedChildName,
             childDateOfBirth = request.childDateOfBirth,
             guardianFullName = request.guardianFullName.trim(),
             phoneNumber = request.phoneNumber.trim(),
-            email = request.email.trim().lowercase(),
+            email = normalizedEmail,
             address = request.address.trim(),
             classroom = classroom,
             comment = request.comment?.trim()?.takeIf { it.isNotEmpty() },
@@ -67,3 +80,5 @@ class SchoolRegistrationService(
     private fun calculateAgeYears(dateOfBirth: LocalDate?): Int? =
         dateOfBirth?.let { ChronoUnit.YEARS.between(it, LocalDate.now()).toInt() }
 }
+
+class DuplicateRegistrationException : RuntimeException("A registration already exists for this child")
