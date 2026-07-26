@@ -71,6 +71,10 @@ tasks.check {
     dependsOn(integrationTest)
 }
 
+tasks.bootJar {
+    archiveFileName.set("app.jar")
+}
+
 kotlin {
     compilerOptions {
         freeCompilerArgs.addAll("-Xjsr305=strict")

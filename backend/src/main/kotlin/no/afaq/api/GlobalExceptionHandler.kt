@@ -24,4 +24,11 @@ class GlobalExceptionHandler {
         body["error"] = ex.message ?: "Bad request"
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body)
     }
+
+    @ExceptionHandler(DuplicateRegistrationException::class)
+    fun handleDuplicateRegistration(ex: DuplicateRegistrationException): ResponseEntity<Map<String, Any>> {
+        val body: MutableMap<String, Any> = linkedMapOf()
+        body["error"] = ex.message ?: "Duplicate registration"
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(body)
+    }
 }

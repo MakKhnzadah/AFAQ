@@ -13,9 +13,17 @@ export class ApiError extends Error {
 }
 
 async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
+  const csrfToken = document.cookie
+    .split('; ')
+    .find(cookie => cookie.startsWith('XSRF-TOKEN='))
+    ?.split('=')
+    .slice(1)
+    .join('=');
+
   const response = await fetch(`${API_BASE_URL}${path}`, {
     headers: {
       'Content-Type': 'application/json',
+      ...(csrfToken ? { 'X-XSRF-TOKEN': decodeURIComponent(csrfToken) } : {}),
       ...(init.headers || {}),
     },
     credentials: 'include',
@@ -26,7 +34,10 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
   const body = contentType.includes('application/json') ? await response.json().catch(() => null) : await response.text().catch(() => null);
 
   if (!response.ok) {
-    const errorMessage = typeof body === 'object' && body && 'error' in body ? String((body as any).error) : 'Request failed';
+    const errorMessage =
+      typeof body === 'object' && body && 'error' in body
+        ? String((body as ApiErrorShape).error)
+        : 'Request failed';
     throw new ApiError(errorMessage, response.status, body as ApiErrorShape | undefined);
   }
 
