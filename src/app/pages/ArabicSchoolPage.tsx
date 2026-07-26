@@ -1,9 +1,11 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   BookOpen, Clock, Image as ImageIcon, Bell, CheckCircle,
   AlertCircle, Loader2, Phone, Mail, Calendar, ChevronDown
 } from 'lucide-react';
 import { Button } from '@/app/components/ui/button';
+import { fetchClassrooms, type ClassroomOption } from '@/api/classroomApi';
+import { submitSchoolRegistration, type SchoolRegistrationResponse } from '@/api/registrationApi';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/app/components/ui/card';
 import { Input } from '@/app/components/ui/input';
 import { Label } from '@/app/components/ui/label';
@@ -85,16 +87,7 @@ export function useSchoolStore() {
 
 // ─── Classrooms ───────────────────────────────────────────────────────────────
 
-const CLASSROOMS = [
-  'Klasserom 1 / الفصل 1',
-  'Klasserom 2 / الفصل 2',
-  'Klasserom 3 / الفصل 3',
-  'Klasserom 4 / الفصل 4',
-  'Klasserom 5 / الفصل 5',
-  'Klasserom 6 / الفصل 6',
-  'Klasserom 7 / الفصل 7',
-  'Klasserom 8 / الفصل 8',
-];
+const PRIVACY_POLICY_VERSION = '2026-07';
 
 // ─── Section nav ─────────────────────────────────────────────────────────────
 
@@ -170,11 +163,20 @@ function RegistrationSection() {
   const isRtl = language === 'ar';
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [submitError, setSubmitError] = useState<string>('');
+  const [classrooms, setClassrooms] = useState<ClassroomOption[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [form, setForm] = useState({
     childName: '', childAge: '', childDob: '', parentName: '',
     phone: '', email: '', address: '', classroom: '', comments: '', consent: false,
   });
+  const [reference, setReference] = useState<string>('');
+
+  useEffect(() => {
+    fetchClassrooms()
+      .then(setClassrooms)
+      .catch(() => setClassrooms([]));
+  }, []);
 
   const validate = () => {
     const e: Record<string, string> = {};
@@ -190,27 +192,39 @@ function RegistrationSection() {
     return e;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const errs = validate();
-    if (Object.keys(errs).length > 0) { setErrors(errs); return; }
+    if (Object.keys(errs).length > 0) {
+      setErrors(errs);
+      setSubmitError('');
+      return;
+    }
+
     setLoading(true);
-    const body = [
-      `${t('childFullName')}: ${form.childName}`,
-      `${t('childAge')}: ${form.childAge}`,
-      `${t('childDob')}: ${form.childDob}`,
-      `${t('parentName')}: ${form.parentName}`,
-      `${t('phone')}: ${form.phone}`,
-      `${t('emailAddress')}: ${form.email}`,
-      `${t('addressField')}: ${form.address}`,
-      `${t('desiredClassroom')}: ${form.classroom}`,
-      `${t('comments')}: ${form.comments}`,
-    ].join('\n');
-    setTimeout(() => {
-      window.location.href = `mailto:qosaya@gmail.com?subject=${encodeURIComponent('Registrering – Arabisk skole / تسجيل في المدرسة العربية')}&body=${encodeURIComponent(body)}`;
-      setLoading(false);
+    setSubmitError('');
+
+    try {
+      const response: SchoolRegistrationResponse = await submitSchoolRegistration({
+        childFullName: form.childName,
+        childDateOfBirth: form.childDob,
+        guardianFullName: form.parentName,
+        phoneNumber: form.phone,
+        email: form.email,
+        address: form.address,
+        classroomId: form.classroom,
+        comment: form.comments || undefined,
+        consentAccepted: form.consent,
+        privacyPolicyVersion: PRIVACY_POLICY_VERSION,
+      });
+
+      setReference(response.publicReference);
       setSubmitted(true);
-    }, 800);
+    } catch (error) {
+      setSubmitError(error instanceof Error ? error.message : 'Server error');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const set = (k: string, v: string | boolean) => {
@@ -230,7 +244,16 @@ function RegistrationSection() {
             ? 'سنتواصل معكم قريباً على البريد الإلكتروني أو الهاتف المقدم.'
             : 'Vi vil kontakte deg snart på e-post eller telefon som oppgitt.'}
         </p>
-        <Button className="mt-8 bg-emerald-600 hover:bg-emerald-700" onClick={() => setSubmitted(false)}>
+        {reference && (
+          <p className="mt-3 text-sm text-emerald-700 font-medium">
+            {language === 'ar' ? 'المرجع العام:' : 'Din referanse:'} {reference}
+          </p>
+        )}
+        <Button className="mt-8 bg-emerald-600 hover:bg-emerald-700" onClick={() => {
+          setSubmitted(false);
+          setReference('');
+          setSubmitError('');
+        }}>
           {language === 'ar' ? 'تسجيل آخر' : 'Ny registrering'}
         </Button>
       </div>
@@ -272,7 +295,7 @@ function RegistrationSection() {
                     className={`w-full h-10 px-3 rounded-md border text-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 ${errors.classroom ? 'border-red-400' : 'border-input'}`}
                   >
                     <option value="">{t('selectClassroom')}</option>
-                    {CLASSROOMS.map(c => <option key={c} value={c}>{c}</option>)}
+                    {classrooms.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                   </select>
                 </Field>
               </div>
@@ -322,6 +345,12 @@ function RegistrationSection() {
               <div className="flex items-center gap-2 text-red-600 bg-red-50 px-4 py-3 rounded-lg text-sm">
                 <AlertCircle className="h-4 w-4 flex-shrink-0" />
                 {language === 'ar' ? 'يرجى تصحيح الأخطاء أعلاه' : 'Vennligst rett feilene ovenfor'}
+              </div>
+            )}
+            {submitError && (
+              <div className="flex items-center gap-2 text-red-600 bg-red-50 px-4 py-3 rounded-lg text-sm">
+                <AlertCircle className="h-4 w-4 flex-shrink-0" />
+                {submitError}
               </div>
             )}
 

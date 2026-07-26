@@ -65,7 +65,7 @@ export const PrayerTimesPage: React.FC = () => {
                   {t('prayerTimesNote')}
                 </p>
                 <a 
-                  href="https://bt.iksg.no/" 
+                  href="https://bonnetid.no/" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="inline-block"
@@ -94,7 +94,7 @@ export const PrayerTimesPage: React.FC = () => {
             return (
               <a
                 key={index}
-                href="https://bt.iksg.no/"
+                href="https://bonnetid.no/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block group"
