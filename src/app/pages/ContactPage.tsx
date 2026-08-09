@@ -159,6 +159,14 @@ export const ContactPage: React.FC = () => {
                     <p className="text-gray-700">
                       {t('addressValue')}
                     </p>
+                    <a
+                      href={t('googleMapsUrl')}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block mt-2 text-emerald-600 hover:text-emerald-700 transition-colors"
+                    >
+                      {t('openInGoogleMaps')}
+                    </a>
                   </div>
                 </div>
               </CardContent>
