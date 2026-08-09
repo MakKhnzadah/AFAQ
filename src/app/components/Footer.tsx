@@ -60,6 +60,14 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 <div className="text-sm">
                   <p className="font-medium text-white">{t('address')}</p>
                   <p>{t('addressValue')}</p>
+                  <a
+                    href={t('googleMapsUrl')}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block mt-1 hover:text-emerald-400 transition-colors"
+                  >
+                    {t('openInGoogleMaps')}
+                  </a>
                 </div>
               </div>
               <div className="flex items-start gap-2">

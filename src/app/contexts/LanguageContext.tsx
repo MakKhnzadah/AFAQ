@@ -111,7 +111,9 @@ const translations = {
     contactInfo: 'معلومات الاتصال',
     email: 'البريد الإلكتروني',
     address: 'العنوان',
-    addressValue: 'جريمستاد، النرويج',
+    addressValue: 'مركز آفاق الإسلامي الثقافي في جريمستاد',
+    openInGoogleMaps: 'فتح في خرائط Google',
+    googleMapsUrl: 'https://www.google.com/maps/place/AFAQ+ISLAMSK+KULTURSENTERET+I+GRIMSTAD./@58.3392192,8.5937912,17z/data=!3m1!4b1!4m6!3m5!1s0x4647ef9d1691dc11:0x25ac503aaee1c823!8m2!3d58.3392192!4d8.5963661!16s%2Fg%2F11qn9cj6bj',
     followUs: 'تابعونا',
 
     // Gallery
@@ -224,7 +226,9 @@ const translations = {
     contactInfo: 'Kontaktinformasjon',
     email: 'E-post',
     address: 'Adresse',
-    addressValue: 'Grimstad, Norge',
+    addressValue: 'AFAQ Islamsk Kultursenteret i Grimstad',
+    openInGoogleMaps: 'Open in Google Maps',
+    googleMapsUrl: 'https://www.google.com/maps/place/AFAQ+ISLAMSK+KULTURSENTERET+I+GRIMSTAD./@58.3392192,8.5937912,17z/data=!3m1!4b1!4m6!3m5!1s0x4647ef9d1691dc11:0x25ac503aaee1c823!8m2!3d58.3392192!4d8.5963661!16s%2Fg%2F11qn9cj6bj',
     followUs: 'Følg Oss',
 
     // Gallery
