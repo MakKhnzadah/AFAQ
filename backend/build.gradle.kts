@@ -42,6 +42,7 @@ dependencies {
     testImplementation("org.testcontainers:postgresql")
     testImplementation("com.h2database:h2")
     testImplementation("io.mockk:mockk:1.13.5")
+    testImplementation("org.springframework.security:spring-security-test")
 }
 
 tasks.test {
