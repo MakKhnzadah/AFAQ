@@ -58,7 +58,7 @@ class GalleryService(
         )
 
         return try {
-            toResponse(galleryItemRepository.save(entity))
+            toResponse(galleryItemRepository.saveAndFlush(entity))
         } catch (ex: RuntimeException) {
             safeDeleteNewFile(storedImage.imageKey)
             throw ex
@@ -87,7 +87,7 @@ class GalleryService(
         }
 
         val saved = try {
-            galleryItemRepository.save(item)
+            galleryItemRepository.saveAndFlush(item)
         } catch (ex: RuntimeException) {
             if (storedImage != null) {
                 safeDeleteNewFile(storedImage.imageKey)
@@ -111,7 +111,7 @@ class GalleryService(
         val item = galleryItemRepository.findById(id)
             .orElseThrow { GalleryItemNotFoundException() }
         item.active = active
-        return toResponse(galleryItemRepository.save(item))
+        return toResponse(galleryItemRepository.saveAndFlush(item))
     }
 
     @Transactional

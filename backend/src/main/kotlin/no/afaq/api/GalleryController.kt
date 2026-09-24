@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.bind.annotation.ResponseStatus
@@ -58,7 +59,7 @@ class GalleryController(
     @PatchMapping("/admin/gallery/{id}/status")
     fun updateGalleryStatus(
         @PathVariable id: UUID,
-        @RequestPart request: UpdateGalleryItemStatusRequest,
+        @RequestBody request: UpdateGalleryItemStatusRequest,
     ) = galleryService.setActiveStatus(id, request.active)
 
     @DeleteMapping("/admin/gallery/{id}")

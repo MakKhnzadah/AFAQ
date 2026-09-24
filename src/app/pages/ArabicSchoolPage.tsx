@@ -165,6 +165,7 @@ function RegistrationSection() {
   const [loading, setLoading] = useState(false);
   const [submitError, setSubmitError] = useState<string>('');
   const [classrooms, setClassrooms] = useState<ClassroomOption[]>([]);
+  const [classroomLoadError, setClassroomLoadError] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [form, setForm] = useState({
     childName: '', childAge: '', childDob: '', parentName: '',
@@ -175,7 +176,7 @@ function RegistrationSection() {
   useEffect(() => {
     fetchClassrooms()
       .then(setClassrooms)
-      .catch(() => setClassrooms([]));
+      .catch(() => setClassroomLoadError(true));
   }, []);
 
   const validate = () => {
@@ -292,11 +293,21 @@ function RegistrationSection() {
                   <select
                     value={form.classroom}
                     onChange={e => set('classroom', e.target.value)}
+                    disabled={classrooms.length === 0}
                     className={`w-full h-10 px-3 rounded-md border text-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 ${errors.classroom ? 'border-red-400' : 'border-input'}`}
                   >
-                    <option value="">{t('selectClassroom')}</option>
+                    <option value="">
+                      {classroomLoadError
+                        ? (isRtl ? 'تعذر تحميل الفصول الدراسية' : 'Kunne ikke laste klasserom')
+                        : (classrooms.length === 0 ? (isRtl ? 'جار التحميل...' : 'Laster klasserom...') : t('selectClassroom'))}
+                    </option>
                     {classrooms.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                   </select>
+                  {classroomLoadError && (
+                    <p className="mt-1 text-sm text-red-600" role="alert">
+                      {isRtl ? 'تحقق من تشغيل الخادم ثم أعد تحميل الصفحة.' : 'Kontroller at backend-serveren kjører og last siden på nytt.'}
+                    </p>
+                  )}
                 </Field>
               </div>
             </div>
