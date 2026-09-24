@@ -1,7 +1,7 @@
 
   # Afaq Islamic Center Website
 
-  This is a code bundle for Afaq Islamic Center Website. The original project is available at https://www.figma.com/design/MSUDpmgp4juLBb5YR9OSA5/Afaq-Islamic-Center-Website.
+  This is a code bundle for Afaq Islamic Center Website. The original design project is available at https://www.figma.com/design/MSUDpmgp4juLBb5YR9OSA5/Afaq-Islamic-Center-Website.
 
 ## Running the code
 
@@ -56,7 +56,7 @@ Application security
 
 I am building a website for AFAQ Islamsk Kultursenter in Grimstad, Norway.
 
-A large part of the frontend has already been created and updated using Figma AI, React, and TypeScript.
+A large part of the frontend has already been created and updated using a design tool, React, and TypeScript.
 
 Your task is not to redesign or rebuild the application from scratch.
 
@@ -111,7 +111,7 @@ Do not replace working UI components unless necessary.
 
 Do not change the existing visual identity, colors, typography, spacing, card style, responsive behavior, or bilingual functionality unless required to fix a problem.
 
-3. Current frontend implementation created by Figma AI
+3. Current frontend implementation created with a design tool
 
 The following functionality has already been implemented in the frontend.
 
@@ -994,7 +994,7 @@ Focus trapping in modals
 Escape-key behavior in modals
 Screen-reader announcements for submission success and errors
 
-Do not replace working Figma-generated accessibility behavior without a reason.
+Do not replace working design-generated accessibility behavior without a reason.
 
 18. Logging and auditing
 
@@ -1609,7 +1609,7 @@ Identify the next task.
 
 Do not generate the entire application in one uncontrolled response.
 
-Do not overwrite working Figma-generated components without first explaining why.
+Do not overwrite working design-generated components without first explaining why.
 
 Do not invent repository files.
 
